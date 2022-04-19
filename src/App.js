@@ -1,25 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import styled from "styled-components";
+import { Auth, Home } from "./Pages";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { lightMode, darkMode, GlobalStyle } from "./theme";
+import { ThemeProvider } from "styled-components";
+import { storeState } from "./Redux/storeSlice";
+import { useSelector } from "react-redux";
 
-function App() {
+const Container = styled.div`
+  transition: 0.2s ease all;
+  height: 100vh;
+`;
+
+const App = () => {
+  const { selectedTheme } = useSelector(storeState);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <ThemeProvider theme={selectedTheme === "light" ? lightMode : darkMode}>
+        <Container>
+          <GlobalStyle />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/signin" element={<Auth signin />} />
+            <Route path="/register" element={<Auth register />} />
+          </Routes>
+        </Container>
+      </ThemeProvider>
+    </BrowserRouter>
   );
-}
+};
 
 export default App;
