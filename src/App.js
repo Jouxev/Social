@@ -14,7 +14,7 @@ const Container = styled.div`
 const App = () => {
   const { selectedTheme } = useSelector(storeState);
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={process.env.PUBLIC_URL}>
       <ThemeProvider theme={selectedTheme === "light" ? lightMode : darkMode}>
         <Container>
           <GlobalStyle />
