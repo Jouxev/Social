@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import { SideMenu } from "./";
+import ProfilePic from "../Assets/Images/profile.jpeg";
 
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
@@ -11,7 +13,9 @@ import { ThemeswitchIcon } from ".";
 import { mobile, tablet } from "../responsive";
 import { useState } from "react";
 
-const Container = styled.header``;
+const Container = styled.header`
+  position: relative;
+`;
 const NavbarContainer = styled.div`
   display: flex;
   align-items: center;
@@ -60,9 +64,13 @@ const SearchInput = styled.input`
     font-size: 16px;
     color: lightgray;
   }
+  ${mobile({
+    width: "10rem",
+  })}
 `;
 const UserActionContainer = styled.div`
   display: flex;
+  align-items: center;
   & > svg {
     font-size: 2.5rem;
     margin-left: 10px;
@@ -77,6 +85,7 @@ const UserActionContainer = styled.div`
 `;
 const HamburgerMenuContainer = styled.div`
   display: none;
+  z-index: 99 !important;
   & > svg {
     font-size: 2.5rem;
     margin-left: 10px;
@@ -89,6 +98,31 @@ const HamburgerMenuContainer = styled.div`
     display: "block",
   })}
 `;
+const UserAvatar = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 0px 20px;
+  align-items: center;
+  border-radius: 50%;
+  padding: 1px;
+  border: 2px solid ${(props) => props.theme.fontColor};
+  cursor: pointer;
+  transition: 0.2 ease all;
+  &:hover {
+    border: 2px solid ${(props) => props.theme.fontColorSecondary};
+    transform: scale(1.1);
+    & > img {
+      transition: 0.2 ease all;
+      opacity: 0.8;
+    }
+  }
+`;
+const UserImage = styled.img`
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+`;
+
 export const Navbar = () => {
   const [menuOpened, setmenuOpened] = useState(false);
   return (
@@ -106,6 +140,9 @@ export const Navbar = () => {
           />
         </SearchContainer>
         <UserActionContainer>
+          <UserAvatar title={"Full name "}>
+            <UserImage src={ProfilePic} alt="userName" />
+          </UserAvatar>
           <ThemeswitchIcon />
           <ForumOutlinedIcon />
           <LogoutRoundedIcon />
@@ -118,6 +155,7 @@ export const Navbar = () => {
           )}
         </HamburgerMenuContainer>
       </NavbarContainer>
+      {menuOpened && <SideMenu toggleMenu={() => setmenuOpened(!menuOpened)} />}
     </Container>
   );
 };

@@ -7,7 +7,7 @@ import { storeState } from "./Redux/storeSlice";
 import { useSelector } from "react-redux";
 
 const Container = styled.div`
-  transition: 0.2s ease all;
+  transition: 0.4s ease all;
   height: 100vh;
 `;
 

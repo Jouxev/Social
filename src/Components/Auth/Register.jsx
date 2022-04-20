@@ -78,7 +78,7 @@ export const Register = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fullName === "" ? setFullNameError(true) : setuserNameError(false);
+    fullName === "" ? setFullNameError(true) : setFullNameError(false);
     userName === "" ? setuserNameError(true) : setuserNameError(false);
     passWord === "" ? setpassWordError(true) : setpassWordError(false);
   };
@@ -94,7 +94,7 @@ export const Register = () => {
             onChange={(e) => setfullName(e.target.value)}
             value={fullName}
           />
-          {userNameError && <Label> Full name is required </Label>}
+          {fullNameError && <Label> Full name is required </Label>}
         </InputContainer>
         <InputContainer>
           <Input
