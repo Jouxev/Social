@@ -1,3 +1,4 @@
 import Auth from "./Auth";
 import { Home } from "./Home";
-export { Auth, Home };
+import { PostPage } from "./Post";
+export { Auth, Home, PostPage };

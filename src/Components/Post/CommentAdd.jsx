@@ -27,6 +27,7 @@ const CommentText = styled.textarea`
   border: none;
   outline: none;
   border-radius: 10px;
+  padding: 10px;
   resize: none;
   font-family: "Monteserrat";
   flex: 1;

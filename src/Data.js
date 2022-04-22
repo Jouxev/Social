@@ -65,3 +65,18 @@ export const postsData = [
     publishedAt: "30 Avr 2021",
   },
 ];
+
+export const commentsData = [
+  {
+    id: 1,
+    postId: 1,
+    author: {
+      name: "Karim tabou",
+      avatar:
+        "https://i.pinimg.com/originals/91/d0/c9/91d0c92333ccb56395febdc1e3a2dc9b.jpg",
+      userId: 3,
+    },
+    content: "super car i really like it ",
+    publishedAt: "30 Avr 2021",
+  },
+];
