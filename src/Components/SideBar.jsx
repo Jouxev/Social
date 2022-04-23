@@ -3,7 +3,7 @@ import { tablet } from "../responsive";
 import { FriendItem } from "./SideBar/FriendItem";
 const Container = styled.div`
   height: 90%;
-  width: 35%;
+  width: 25%;
   margin-top: 2rem;
   bottom: 0;
   right: 0;

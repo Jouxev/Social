@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { commentsData } from "../../Data";
-import { tablet } from "../../responsive";
+import { mobile, tablet } from "../../responsive";
 import { Author } from "./Author";
 import { Comments } from "./Comments";
 import { Interaction } from "./Interaction";
@@ -20,15 +20,23 @@ const Container = styled.div`
     display: none;
   }
   ${tablet({
-    width: "90%",
+    width: "100%",
+    margin: "2rem 0px 0px 0px",
   })}
 `;
 const PostViewContainer = styled.div`
   display: flex;
+  ${tablet({
+    flexDirection: "column",
+  })}
 `;
 const PostContentContainer = styled.div`
   width: 65%;
   border-right: 1px solid ${(props) => props.theme.fontColorSecondary};
+  ${tablet({
+    width: "100%",
+    borderRight: "none;",
+  })}
 `;
 const PostCommentContainer = styled.div`
   padding: 0px 10px;

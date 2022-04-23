@@ -4,7 +4,8 @@ import ForumOutlinedIcon from "@mui/icons-material/ForumOutlined";
 import ProfilePic from "../Assets/Images/profile.jpeg";
 
 import { ThemeswitchIcon } from ".";
-import { tablet } from "../responsive";
+import { mobile, tablet } from "../responsive";
+import { FriendItem } from "./SideBar/FriendItem";
 
 const Container = styled.div`
   position: fixed;
@@ -14,6 +15,7 @@ const Container = styled.div`
   right: 0;
   background: rgba(0, 0, 0, 0.4);
   display: none;
+  z-index: 5 !important;
   ${tablet({
     display: "block",
   })}
@@ -23,11 +25,14 @@ const SideMenuContainer = styled.div`
   top: 0;
   right: 0;
   height: 100vh;
-  width: 70%;
+  width: 50%;
   background: ${(props) => props.theme.element};
   -webkit-box-shadow: -3px 1px 9px 0px
     ${(props) => props.theme.fontColorSecondary};
   box-shadow: -3px 1px 9px 0px ${(props) => props.theme.fontColorSecondary};
+  ${mobile({
+    width: "70%",
+  })}
 `;
 const UserActionContainer = styled.div`
   display: none;
@@ -101,6 +106,12 @@ export const SideMenu = (props) => {
         </UserActionContainer>
         <FriendListContainer>
           <Title>Friend List</Title>
+          <FriendItem />
+          <FriendItem />
+          <FriendItem />
+          <FriendItem />
+          <FriendItem />
+          <FriendItem />
         </FriendListContainer>
       </SideMenuContainer>
     </Container>

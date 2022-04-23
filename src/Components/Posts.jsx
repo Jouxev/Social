@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { postsData } from "../Data";
 import { tablet } from "../responsive";
 import { Post } from "./Post/Post";
+import { PostAdd } from "./Post/PostAdd";
 
 const Container = styled.div`
   width: 60%;
@@ -18,15 +19,15 @@ const Container = styled.div`
   })}
 `;
 
-export const Posts = () => {
+export const Posts = (props) => {
   return (
     <Container>
-      {postsData.map((post) => (
-        <Post item={post} key={post.id} />
-      ))}
-      {postsData.map((post) => (
-        <Post item={post} key={post.id} />
-      ))}
+      <PostAdd />
+      {props.currentUserId
+        ? postsData
+            .filter((post) => post.author.userId === props.currentUserId)
+            .map((item) => <Post item={item} key={item.id} />)
+        : postsData.map((post) => <Post item={post} key={post.id} />)}
     </Container>
   );
 };
