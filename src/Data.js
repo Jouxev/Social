@@ -80,3 +80,41 @@ export const commentsData = [
     publishedAt: "30 Avr 2021",
   },
 ];
+
+export const chatData = [
+  {
+    id: 1,
+    content: "Hello Bro how are you ?",
+    senderId: 3,
+    recipient: 5,
+    publishedAt: "12 december 2015 21:02",
+  },
+  {
+    id: 1,
+    content: "Hello i'm good what about you ?",
+    senderId: 5,
+    recipient: 3,
+    publishedAt: "12 december 2015 21:02",
+  },
+  {
+    id: 1,
+    content: "what are you doing ?",
+    senderId: 3,
+    recipient: 5,
+    publishedAt: "Fine thank you, just chillin",
+  },
+  {
+    id: 1,
+    content: "have nice day then",
+    senderId: 5,
+    recipient: 3,
+    publishedAt: "12 december 2015 21:02",
+  },
+  {
+    id: 1,
+    content: "Hello Bro how are you ?",
+    senderId: 1,
+    recipient: 5,
+    publishedAt: "12 december 2015 21:02",
+  },
+];

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Auth, Home, PostPage, Profile } from "./Pages";
+import { Auth, ChatPage, Home, PostPage, Profile } from "./Pages";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { lightMode, darkMode, GlobalStyle } from "./theme";
 import { ThemeProvider } from "styled-components";
@@ -20,6 +20,7 @@ const App = () => {
           <GlobalStyle />
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/chat" element={<ChatPage />} />
             <Route path="/post" element={<PostPage />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/signin" element={<Auth signin />} />
