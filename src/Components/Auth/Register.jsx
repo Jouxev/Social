@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-
+import CircularProgress from "@mui/material/CircularProgress";
+import axios from "axios";
+import { API_URI } from "../../Config";
 const Container = styled.div`
   background: ${(props) => props.theme.input};
   padding: 40px;
@@ -76,13 +78,41 @@ export const Register = () => {
   const [passWord, setpassWord] = useState("");
   const [passWordError, setpassWordError] = useState(false);
 
+  const [isLoading, setisLoading] = useState(false);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     fullName === "" ? setFullNameError(true) : setFullNameError(false);
     userName === "" ? setuserNameError(true) : setuserNameError(false);
     passWord === "" ? setpassWordError(true) : setpassWordError(false);
+
+    if (
+      fullNameError !== true &&
+      userNameError !== true &&
+      passWordError !== true
+    ) {
+      let user = {
+        fullname: fullName,
+        email: userName,
+        password: passWord,
+      };
+      postUserToServer(user);
+    }
   };
 
+  const postUserToServer = async (user) => {
+    setisLoading(true);
+    await axios
+      .post(API_URI + "api/users/new", user, {
+        header: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((data) => {
+        console.log(data);
+        setisLoading(false);
+      });
+  };
   return (
     <Container>
       <Form onSubmit={(e) => handleSubmit(e)}>
@@ -115,7 +145,13 @@ export const Register = () => {
           {passWordError && <Label> Your Password is required </Label>}
         </InputContainer>
         <InputContainer>
-          <Button type="submit"> Register </Button>{" "}
+          <Button type="submit">
+            {isLoading ? (
+              <CircularProgress color="inherit" size={25} />
+            ) : (
+              "Register"
+            )}
+          </Button>{" "}
         </InputContainer>
         <LinkContainer>
           Already have account ? <Link to="/signin"> Sign In </Link>
