@@ -55,8 +55,9 @@ export const PostContent = (props) => {
           />
           {props.item.images.length > 1 && (
             <ImagesTumbnails>
-              {props.item.images.map((image) => (
+              {props.item.images.map((image, index) => (
                 <Thumb
+                  key={index}
                   src={image}
                   alt="imagePreview"
                   onClick={(e) => setselectedImage(e.target.src)}
