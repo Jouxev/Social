@@ -15,7 +15,7 @@ export const Post = (props) => {
     <Container>
       <Author item={props.item} />
       <PostContent item={props.item} />
-      <Interaction />
+      <Interaction item={props.item} />
     </Container>
   );
 };

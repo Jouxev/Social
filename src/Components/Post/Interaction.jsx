@@ -26,12 +26,12 @@ const Count = styled.span`
   margin-right: 10px;
 `;
 
-export const Interaction = () => {
+export const Interaction = (props) => {
   return (
     <Container>
       <Reactions>
         <FavoriteBorderOutlinedIcon />
-        <Count> 10K</Count>
+        <Count> {props.item.Likes.length}</Count>
         <ModeCommentOutlinedIcon />
       </Reactions>
       <CommentAdd />

@@ -1,5 +1,10 @@
+import axios from "axios";
+import { useState } from "react";
+import { useEffect } from "react";
 import styled from "styled-components";
 import avatarImage from "../../Assets/Images/avatar.png";
+import { API_URI } from "../../Config";
+import moment from "moment";
 
 const Container = styled.div`
   display: flex;
@@ -54,21 +59,40 @@ const PostDateTime = styled.span`
 `;
 
 export const Author = (props) => {
+  const [author, setauthor] = useState({});
+
+  useEffect(() => {
+    axios
+      .post(
+        `${API_URI}api/users/show`,
+        JSON.stringify({
+          userId: props.item.author,
+        }),
+        {
+          headers: {
+            "Content-type": "application/json",
+          },
+        }
+      )
+      .then((data) => {
+        console.log(data);
+        setauthor({
+          fullname: data.data.fullname,
+          profilePic: data.data.profilePic,
+        });
+      });
+  }, []);
   return (
     <Container>
       <UserAvatarContainer>
         <UserAvatar
-          src={
-            props.item.author.avatar === ""
-              ? avatarImage
-              : props.item.author.avatar
-          }
-          alt={props.item.author.name}
+          src={author.profilePic === "" ? avatarImage : author.profilePic}
+          alt={author.fullname}
         />
       </UserAvatarContainer>
       <AuthorInfoContainer>
-        <AuthorName> {props.item.author.name} </AuthorName>
-        <PostDateTime> {props.item.publishedAt} </PostDateTime>
+        <AuthorName> {author.fullname} </AuthorName>
+        <PostDateTime> {moment(props.item.createdAt).calendar()} </PostDateTime>
       </AuthorInfoContainer>
     </Container>
   );

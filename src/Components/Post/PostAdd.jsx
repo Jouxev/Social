@@ -3,7 +3,12 @@ import { mobile, tablet } from "../../responsive";
 import ImageRoundedIcon from "@mui/icons-material/ImageRounded";
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
 import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
+import CircularProgress from "@mui/material/CircularProgress";
 import { useState, useRef } from "react";
+import { API_URI } from "../../Config";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { getPosts } from "../../Redux/postSlice";
 
 const Container = styled.div`
   display: flex;
@@ -95,7 +100,9 @@ const ImagePreviewThumb = styled.img`
 export const PostAdd = () => {
   const inputFile = useRef(null);
   const [imageCollection, setImageCollection] = useState([]);
-
+  const [postContent, setpostContent] = useState("");
+  const [isLoading, setisLoading] = useState(false);
+  const dispatch = useDispatch();
   const ImageFileInputChange = (e) => {
     for (var i = 0; i < e.target.files.length; i++) {
       const reader = new FileReader();
@@ -114,7 +121,29 @@ export const PostAdd = () => {
     setImageCollection(myArray);
   };
 
-  const postToServer = () => {};
+  const postToServer = () => {
+    setisLoading(true);
+    let post = {
+      userId: "626d918be17a9c01f348f72d",
+      content: postContent,
+      images: imageCollection,
+    };
+    axios
+      .post(`${API_URI}api/post/new`, post, {
+        "Content-type": "application/json",
+      })
+      .then((data) => {
+        // reset fields
+        setpostContent("");
+        setImageCollection([]);
+        setisLoading(false);
+        dispatch(getPosts());
+      })
+      .catch((err) => {
+        console.log(err);
+        setisLoading(false);
+      });
+  };
   return (
     <Container>
       {imageCollection.length > 0 && (
@@ -133,7 +162,12 @@ export const PostAdd = () => {
           ))}
         </ImagePreviewContainer>
       )}
-      <TextAdd rows={5} placeholder="What's on your mind " />
+      <TextAdd
+        rows={5}
+        placeholder="What's on your mind "
+        onChange={(e) => setpostContent(e.target.value)}
+        value={postContent}
+      />
       <PostButton>
         <PostButtonIcon>
           <ImageRoundedIcon onClick={() => inputFile.current.click()} />
@@ -148,7 +182,11 @@ export const PostAdd = () => {
           />
         </PostButtonIcon>
         <PostButtonIcon>
-          <SendRoundedIcon onClick={() => postToServer()} />
+          {isLoading ? (
+            <CircularProgress color="inherit" size={25} />
+          ) : (
+            <SendRoundedIcon onClick={() => postToServer()} />
+          )}
         </PostButtonIcon>
       </PostButton>
     </Container>

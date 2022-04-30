@@ -8,7 +8,7 @@ export const postsData = [
       userId: 3,
     },
     content: "Hello it my birthday today wish me the best asdasdasd <3",
-    images: [
+    Images: [
       "https://www.autocar.co.uk/sites/autocar.co.uk/files/styles/gallery_slide/public/images/car-reviews/first-drives/legacy/16-mclaren-765lt-2020-uk-fd-cornering_0.jpg?itok=0Oer2ftA",
       "https://motorsactu.com/wp-content/uploads/2020/11/Nouvelle-Volkswagen-GOLF-8-GTD-23.jpg",
       "https://img4.autodeclics.com/photo_article/102837/41258/1200-L-essai-audi-rs3-sportback-2021-nos-photos-de-la-compacte-nerve.jpg",
@@ -25,7 +25,7 @@ export const postsData = [
     },
     content:
       "Hello it my birthday today wish me th loremp ipspl dolert lat e best <3",
-    images: [],
+    Images: [],
     publishedAt: "30 Avr 2021",
   },
   {
@@ -36,7 +36,7 @@ export const postsData = [
       userId: 13,
     },
     content: "Hello it my birthday today wish me the best <3",
-    images: [],
+    Images: [],
     publishedAt: "30 Avr 2021",
   },
   {
@@ -47,7 +47,7 @@ export const postsData = [
       userId: 3,
     },
     content: "Hello it my birthday today wish me the best <3",
-    images: [
+    Images: [
       "https://fscl01.fonpit.de/userfiles/7043987/image/samsung-galaxy-s20-ultra/androidpit-samsung-galaxy-s20-ultra-871234-w1400h1400.jpg",
     ],
     publishedAt: "30 Avr 2021",
@@ -61,7 +61,7 @@ export const postsData = [
     },
     content:
       "Hello it my birthday today wish me the best <3 rouh ya wliiidiiiii ",
-    images: [],
+    Images: [],
     publishedAt: "30 Avr 2021",
   },
 ];

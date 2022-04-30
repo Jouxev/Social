@@ -1,8 +1,11 @@
+import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { postsData } from "../Data";
+import { useDispatch, useSelector } from "react-redux";
 import { tablet } from "../responsive";
+import { getPosts, postState } from "../Redux/postSlice";
 import { Post } from "./Post/Post";
 import { PostAdd } from "./Post/PostAdd";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const Container = styled.div`
   width: 60%;
@@ -20,14 +23,19 @@ const Container = styled.div`
 `;
 
 export const Posts = (props) => {
+  const { loading, posts } = useSelector(postState);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getPosts());
+  }, []);
   return (
     <Container>
       <PostAdd />
-      {props.currentUserId
-        ? postsData
-            .filter((post) => post.author.userId === props.currentUserId)
-            .map((item) => <Post item={item} key={item.id} />)
-        : postsData.map((post) => <Post item={post} key={post.id} />)}
+      {loading === "loading" && <CircularProgress color="inherit" size={25} />}
+      {posts.map((post) => (
+        <Post item={post} key={post._id} />
+      ))}
     </Container>
   );
 };

@@ -14,9 +14,11 @@ const PostImages = styled.div`
 `;
 const Image = styled.img`
   width: 100%;
+  height: 400px;
   border-radius: 10px;
   margin: 20px 0px;
   cursor: pointer;
+  object-fit: cover;
   &:hover {
     opacity: 0.9;
   }
@@ -47,18 +49,20 @@ export const PostContent = (props) => {
   return (
     <Container>
       <PostText>{props.item.content !== "" && props.item.content}</PostText>
-      {props.item.images.length > 0 && (
+      {props.item.Images.length > 0 && (
         <PostImages>
           <Image
-            src={selectedImage !== null ? selectedImage : props.item.images[0]}
+            src={
+              selectedImage !== null ? selectedImage : props.item.Images[0].url
+            }
             alt={props.item.content}
           />
-          {props.item.images.length > 1 && (
+          {props.item.Images.length > 1 && (
             <ImagesTumbnails>
-              {props.item.images.map((image, index) => (
+              {props.item.Images.map((image, index) => (
                 <Thumb
                   key={index}
-                  src={image}
+                  src={image.url}
                   alt="imagePreview"
                   onClick={(e) => setselectedImage(e.target.src)}
                 />

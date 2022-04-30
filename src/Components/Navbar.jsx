@@ -12,6 +12,7 @@ import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import { ThemeswitchIcon } from ".";
 import { mobile, tablet } from "../responsive";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const Container = styled.header`
   position: relative;
@@ -22,7 +23,10 @@ const NavbarContainer = styled.div`
   justify-content: space-between;
 `;
 const HomeIconContainer = styled.div`
-  & > svg {
+  & > a {
+    color: inherit;
+  }
+  & > a > svg {
     font-size: 2.5rem;
     cursor: pointer;
     &:hover {
@@ -129,7 +133,9 @@ export const Navbar = () => {
     <Container>
       <NavbarContainer>
         <HomeIconContainer>
-          <HomeRoundedIcon />
+          <Link to={"/"}>
+            <HomeRoundedIcon />{" "}
+          </Link>
         </HomeIconContainer>
         <SearchContainer>
           <SearchOutlinedIcon />
