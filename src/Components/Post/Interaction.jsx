@@ -49,6 +49,7 @@ export const Interaction = (props) => {
       )
       .then(() => {
         dispatch(getPosts());
+        props.postPage && props.refreshPage();
       })
       .catch((err) => {
         console.log(err);
@@ -66,15 +67,18 @@ export const Interaction = (props) => {
         ) : (
           <FavoriteBorderOutlinedIcon
             onClick={() => {
-              likeToggle();
+              likeToggle(props);
             }}
           />
         )}
-
         <Count> {props.item.Likes.length}</Count>
-        <ModeCommentOutlinedIcon />
+        <ModeCommentOutlinedIcon /> <Count> {props.item.Comments.length}</Count>
       </Reactions>
-      <CommentAdd />
+      <CommentAdd
+        item={props.item}
+        postPage
+        refreshPage={() => props.refreshPage()}
+      />
     </Container>
   );
 };

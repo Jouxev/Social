@@ -4,19 +4,19 @@ import { Comment } from "./Comment";
 const Container = styled.div`
   height: 500px;
   overflow: scroll;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 export const Comments = (props) => {
   return (
     <Container>
-      {props.items.length > 0 && <Comment item={props.items[0]} />}
-      {props.items.length > 0 && <Comment item={props.items[0]} />}
-      {props.items.length > 0 && <Comment item={props.items[0]} />}
-      {props.items.length > 0 && <Comment item={props.items[0]} />}
-      {props.items.length > 0 && <Comment item={props.items[0]} />}
-      {props.items.length > 0 && <Comment item={props.items[0]} />}
-      {props.items.length > 0 && <Comment item={props.items[0]} />}
-      {props.items.length > 0 && <Comment item={props.items[0]} />}
+      {props.items.map((item) => (
+        <Comment key={item._id} item={item} />
+      ))}
     </Container>
   );
 };

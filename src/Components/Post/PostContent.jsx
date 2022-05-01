@@ -31,12 +31,13 @@ const Image = styled.img`
 const ImagesTumbnails = styled.div`
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
 `;
 const Thumb = styled.img`
   width: 64px;
   height: 64px;
   object-fit: cover;
-  margin: 0px 10px;
+  margin: 5px 10px;
   cursor: pointer;
   border-radius: 5px;
   border: 1px solid ${(props) => props.theme.fontColor};

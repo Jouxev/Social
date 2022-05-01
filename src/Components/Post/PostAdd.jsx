@@ -64,6 +64,7 @@ const PostButtonIcon = styled.div`
 `;
 const ImagePreviewContainer = styled.div`
   display: flex;
+  flex-wrap: wrap;
 `;
 const ImagePreview = styled.img``;
 const ImagePreviewThumContainer = styled.div`
@@ -140,7 +141,7 @@ export const PostAdd = () => {
         dispatch(getPosts());
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err.message);
         setisLoading(false);
       });
   };

@@ -56,16 +56,19 @@ export const PostView = (props) => {
           <PostContent item={props.item} />
         </PostContentContainer>
         <PostCommentContainer>
-          <CommentCount> 12K Comments</CommentCount>
+          <CommentCount>
+            {" "}
+            Total : {props.item.Comments.length} Comments
+          </CommentCount>
 
-          <Comments
-            items={commentsData.filter(
-              (comment) => comment.postId === props.item.id
-            )}
-          />
+          <Comments items={props.item.Comments} />
         </PostCommentContainer>
       </PostViewContainer>
-      <Interaction item={props.item} />
+      <Interaction
+        item={props.item}
+        postPage
+        refreshPage={() => props.refreshPage()}
+      />
     </Container>
   );
 };

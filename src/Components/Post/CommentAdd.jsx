@@ -1,6 +1,12 @@
 import styled from "styled-components";
 import SendOutlinedIcon from "@mui/icons-material/SendOutlined";
+import CircularProgress from "@mui/material/CircularProgress";
+import axios from "axios";
 import { mobile } from "../../responsive";
+import { API_URI } from "../../Config";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { getPosts } from "../../Redux/postSlice";
 
 const Container = styled.div`
   margin: 20px 10px;
@@ -39,15 +45,53 @@ const CommentText = styled.textarea`
   })}
 `;
 
-export const CommentAdd = () => {
+export const CommentAdd = (props) => {
+  const [commentText, setcommentText] = useState("");
+  const [isLoading, setisLoading] = useState(false);
+  const dispatch = useDispatch();
+
+  const postComment = () => {
+    setisLoading(true);
+    axios
+      .post(
+        `${API_URI}api/post/comment`,
+        JSON.stringify({
+          postId: props.item._id,
+          userId: props.item.author,
+          content: commentText,
+        }),
+        {
+          headers: {
+            "Content-type": "application/json",
+          },
+        }
+      )
+      .then((data) => {
+        console.log(data);
+        setisLoading(false);
+        setcommentText("");
+        dispatch(getPosts());
+        props.postPage && props.refreshPage();
+      })
+      .catch((err) => {
+        console.log(err);
+        setisLoading(false);
+      });
+  };
   return (
     <Container>
       <CommentText
         rows={4}
         placeholder="Tap to Comment"
         title="write what you think about this post"
+        onChange={(e) => setcommentText(e.target.value)}
+        value={commentText}
       ></CommentText>
-      <SendOutlinedIcon />
+      {isLoading ? (
+        <CircularProgress color="inherit" size={25} />
+      ) : (
+        <SendOutlinedIcon onClick={() => postComment()} />
+      )}
     </Container>
   );
 };

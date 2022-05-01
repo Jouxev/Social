@@ -51,7 +51,7 @@ export const PostPage = () => {
       {isLoading && <CircularProgress color="inherit" size={25} />}
       {post !== null && (
         <PostContainer>
-          <PostView item={post} />
+          <PostView item={post} refreshPage={() => fetchPost()} />
           <SideBar />
         </PostContainer>
       )}
