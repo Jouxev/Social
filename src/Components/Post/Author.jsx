@@ -75,7 +75,6 @@ export const Author = (props) => {
         }
       )
       .then((data) => {
-        console.log(data);
         setauthor({
           fullname: data.data.fullname,
           profilePic: data.data.profilePic,

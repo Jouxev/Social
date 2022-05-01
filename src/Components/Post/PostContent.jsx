@@ -1,12 +1,14 @@
 import styled from "styled-components";
 import { useState } from "react";
 import { mobile } from "../../responsive";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 20px;
+  cursor: pointer;
 `;
 const PostText = styled.p``;
 const PostImages = styled.div`
@@ -46,8 +48,9 @@ const Thumb = styled.img`
 
 export const PostContent = (props) => {
   const [selectedImage, setselectedImage] = useState(null);
+  let navigate = useNavigate();
   return (
-    <Container>
+    <Container onClick={() => navigate(`/post/${props.item._id}`)}>
       <PostText>{props.item.content !== "" && props.item.content}</PostText>
       {props.item.Images.length > 0 && (
         <PostImages>

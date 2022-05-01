@@ -21,7 +21,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/chat" element={<ChatPage />} />
-            <Route path="/post" element={<PostPage />} />
+            <Route path="/post/:id" element={<PostPage />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/signin" element={<Auth signin />} />
             <Route path="/register" element={<Auth register />} />

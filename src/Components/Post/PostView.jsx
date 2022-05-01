@@ -65,7 +65,7 @@ export const PostView = (props) => {
           />
         </PostCommentContainer>
       </PostViewContainer>
-      <Interaction />
+      <Interaction item={props.item} />
     </Container>
   );
 };
