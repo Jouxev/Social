@@ -5,8 +5,9 @@ import ModeCommentOutlinedIcon from "@mui/icons-material/ModeCommentOutlined";
 import { CommentAdd } from "./CommentAdd";
 import axios from "axios";
 import { API_URI } from "../../Config";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getPosts } from "../../Redux/postSlice";
+import { userState } from "../../Redux/userSlice";
 
 const Container = styled.div`
   padding: 10px 20px;
@@ -33,13 +34,14 @@ const Count = styled.span`
 
 export const Interaction = (props) => {
   const dispatch = useDispatch();
+  const { currentUser } = useSelector(userState);
   const likeToggle = () => {
     axios
       .post(
         `${API_URI}api/post/like`,
         JSON.stringify({
           postId: props.item._id,
-          userId: props.item.author,
+          userId: currentUser.userId,
         }),
         {
           headers: {
@@ -58,7 +60,7 @@ export const Interaction = (props) => {
   return (
     <Container>
       <Reactions>
-        {props.item.Likes.includes("626d918be17a9c01f348f72d") ? (
+        {props.item.Likes.includes(currentUser.userId) ? (
           <FavoriteRoundedIcon
             onClick={() => {
               likeToggle();

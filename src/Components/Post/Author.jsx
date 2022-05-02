@@ -5,6 +5,7 @@ import styled from "styled-components";
 import avatarImage from "../../Assets/Images/avatar.png";
 import { API_URI } from "../../Config";
 import moment from "moment";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   display: flex;
@@ -60,6 +61,7 @@ const PostDateTime = styled.span`
 
 export const Author = (props) => {
   const [author, setauthor] = useState({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -78,12 +80,15 @@ export const Author = (props) => {
         setauthor({
           fullname: data.data.fullname,
           profilePic: data.data.profilePic,
+          userId: data.data._id,
         });
       });
   }, []);
   return (
     <Container>
-      <UserAvatarContainer>
+      <UserAvatarContainer
+        onClick={() => navigate(`/profile/${author.userId}`)}
+      >
         <UserAvatar
           src={author.profilePic === "" ? avatarImage : author.profilePic}
           alt={author.fullname}

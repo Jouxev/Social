@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { SideMenu } from "./";
-import ProfilePic from "../Assets/Images/profile.jpeg";
-
+import avatarImage from "../Assets/Images/avatar.png";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import ForumOutlinedIcon from "@mui/icons-material/ForumOutlined";
@@ -12,7 +11,10 @@ import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import { ThemeswitchIcon } from ".";
 import { mobile, tablet } from "../responsive";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutUser, userState } from "../Redux/userSlice";
 
 const Container = styled.header`
   position: relative;
@@ -124,11 +126,23 @@ const UserAvatar = styled.div`
 const UserImage = styled.img`
   width: 38px;
   height: 38px;
+  object-fit: cover;
   border-radius: 50%;
 `;
 
 export const Navbar = () => {
   const [menuOpened, setmenuOpened] = useState(false);
+  const { currentUser } = useSelector(userState);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const logout = () => {
+    dispatch(logoutUser());
+    navigate("/signin");
+  };
+  useEffect(() => {
+    currentUser == null && navigate("/signin");
+  }, []);
   return (
     <Container>
       <NavbarContainer>
@@ -146,12 +160,18 @@ export const Navbar = () => {
           />
         </SearchContainer>
         <UserActionContainer>
-          <UserAvatar title={"Full name "}>
-            <UserImage src={ProfilePic} alt="userName" />
+          <UserAvatar title={"Full name "} onClick={() => navigate("/profile")}>
+            <UserImage
+              src={
+                currentUser &&
+                (currentUser.userPic ? currentUser.userPic : avatarImage)
+              }
+              alt={currentUser && currentUser.fullname}
+            />
           </UserAvatar>
           <ThemeswitchIcon />
-          <ForumOutlinedIcon />
-          <LogoutRoundedIcon />
+          <ForumOutlinedIcon onClick={() => navigate("/chat")} />
+          <LogoutRoundedIcon onClick={() => logout()} />
         </UserActionContainer>
         <HamburgerMenuContainer>
           {menuOpened ? (

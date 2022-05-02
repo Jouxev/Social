@@ -1,7 +1,12 @@
+import axios from "axios";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { CircularProgress } from "@mui/material";
+import { API_URI } from "../../Config";
 import { tablet } from "../../responsive";
+import { useDispatch, useSelector } from "react-redux";
+import { setUser, userState } from "../../Redux/userSlice";
 
 const Container = styled.div`
   background: ${(props) => props.theme.input};
@@ -73,14 +78,42 @@ const LinkContainer = styled.div`
 export const Signin = () => {
   const [userName, setuserName] = useState("");
   const [userNameError, setuserNameError] = useState(false);
+  const [isLoading, setisLoading] = useState(false);
 
   const [passWord, setpassWord] = useState("");
   const [passWordError, setpassWordError] = useState(false);
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const login = () => {
+    setisLoading(true);
+    axios
+      .post(
+        `${API_URI}api/users/login`,
+        JSON.stringify({
+          user: userName,
+          pass: passWord,
+        }),
+        {
+          headers: { "Content-type": "application/json" },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+        dispatch(setUser(res.data));
+        setisLoading(false);
+        navigate("/");
+      })
+      .catch((err) => {
+        console.log(err);
+        setisLoading(false);
+      });
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
     userName === "" ? setuserNameError(true) : setuserNameError(false);
     passWord === "" ? setpassWordError(true) : setpassWordError(false);
+    (!userNameError || !passWordError) && login();
   };
 
   return (
@@ -106,7 +139,13 @@ export const Signin = () => {
           {passWordError && <Label> Your Password is required </Label>}
         </InputContainer>
         <InputContainer>
-          <Button type="submit"> Sign In </Button>{" "}
+          <Button type="submit">
+            {isLoading ? (
+              <CircularProgress color="inherit" size={25} />
+            ) : (
+              "Sign In"
+            )}
+          </Button>
         </InputContainer>
         <LinkContainer>
           Don't have account ? <Link to="/register"> Register Now </Link>

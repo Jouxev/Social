@@ -57,10 +57,8 @@ export const PostView = (props) => {
         </PostContentContainer>
         <PostCommentContainer>
           <CommentCount>
-            {" "}
             Total : {props.item.Comments.length} Comments
           </CommentCount>
-
           <Comments items={props.item.Comments} />
         </PostCommentContainer>
       </PostViewContainer>

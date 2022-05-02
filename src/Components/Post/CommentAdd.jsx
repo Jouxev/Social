@@ -5,8 +5,9 @@ import axios from "axios";
 import { mobile } from "../../responsive";
 import { API_URI } from "../../Config";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getPosts } from "../../Redux/postSlice";
+import { userState } from "../../Redux/userSlice";
 
 const Container = styled.div`
   margin: 20px 10px;
@@ -49,6 +50,7 @@ export const CommentAdd = (props) => {
   const [commentText, setcommentText] = useState("");
   const [isLoading, setisLoading] = useState(false);
   const dispatch = useDispatch();
+  const { currentUser } = useSelector(userState);
 
   const postComment = () => {
     setisLoading(true);
@@ -57,7 +59,7 @@ export const CommentAdd = (props) => {
         `${API_URI}api/post/comment`,
         JSON.stringify({
           postId: props.item._id,
-          userId: props.item.author,
+          userId: currentUser.userId,
           content: commentText,
         }),
         {
@@ -67,7 +69,6 @@ export const CommentAdd = (props) => {
         }
       )
       .then((data) => {
-        console.log(data);
         setisLoading(false);
         setcommentText("");
         dispatch(getPosts());

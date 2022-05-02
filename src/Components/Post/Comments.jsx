@@ -14,8 +14,8 @@ const Container = styled.div`
 export const Comments = (props) => {
   return (
     <Container>
-      {props.items.map((item) => (
-        <Comment key={item._id} item={item} />
+      {props.items.map((item, index) => (
+        <Comment key={index} item={item} />
       ))}
     </Container>
   );

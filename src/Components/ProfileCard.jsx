@@ -5,7 +5,13 @@ import WatchLaterRoundedIcon from "@mui/icons-material/WatchLaterRounded";
 import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
 import EmailRoundedIcon from "@mui/icons-material/EmailRounded";
 import CakeRoundedIcon from "@mui/icons-material/CakeRounded";
+import { CircularProgress } from "@mui/material";
 import { tablet } from "../responsive";
+import moment from "moment";
+import { useRef } from "react";
+import axios from "axios";
+import { API_URI } from "../Config";
+import { useState } from "react";
 
 const Container = styled.div`
   background: ${(props) => props.theme.element};
@@ -95,27 +101,75 @@ const ButtonEdit = styled.button`
     opacity: 0.8;
   }
 `;
+const FileInput = styled.input`
+  display: none;
+`;
 
-export const ProfileCard = () => {
+export const ProfileCard = (props) => {
+  const InputRef = useRef(null);
+  const [isLoading, setisLoading] = useState(false);
+
+  const uploadImage = (e) => {
+    if (e.target.files.length > 0) {
+      setisLoading(true);
+      const reader = new FileReader();
+      reader.readAsDataURL(e.target.files[0]);
+      reader.onloadend = () => {
+        axios
+          .post(
+            `${API_URI}api/users/uploadUserImage`,
+            JSON.stringify({
+              userId: props.user._id,
+              image: reader.result,
+            }),
+            {
+              headers: { "Content-type": "application/json" },
+            }
+          )
+          .then((res) => {
+            console.log(res);
+            setisLoading(false);
+            props.refresh();
+          })
+          .catch((err) => {
+            console.log(err);
+            setisLoading(false);
+          });
+      };
+    }
+  };
   return (
     <Container>
       <UserPic>
-        <UserImage src={avatarImage} alt="profile Picture" />
-        <CameraAltRoundedIcon />
+        <UserImage
+          src={props.user.profilePic ? props.user.profilePic : avatarImage}
+          alt="profile Picture"
+        />
+        {isLoading ? (
+          <CircularProgress color="inherit" size={25} />
+        ) : (
+          <CameraAltRoundedIcon onClick={() => InputRef.current.click()} />
+        )}
+        <FileInput
+          ref={InputRef}
+          type={"file"}
+          accept="image/png, image/jpg"
+          onChange={(e) => uploadImage(e)}
+        />
       </UserPic>
       <UserName>
-        <Title>Jhoe Baiden </Title>
+        <Title>{props.user.fullname} </Title>
         <SubTitle> About </SubTitle>
       </UserName>
       <UserInfo>
         <InfoItem>
-          <WatchLaterRoundedIcon /> Joined 12 dec 1981{" "}
+          <WatchLaterRoundedIcon /> {moment(props.user.createdAt).calendar()}
         </InfoItem>
         <InfoItem>
           <LocationOnRoundedIcon /> Algiers, Algeria{" "}
         </InfoItem>
         <InfoItem>
-          <EmailRoundedIcon /> joeBaide@outlook.com
+          <EmailRoundedIcon /> {props.user.email}
         </InfoItem>
         <InfoItem>
           <CakeRoundedIcon /> dec, 12th, 2015{" "}

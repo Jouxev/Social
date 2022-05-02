@@ -7,8 +7,9 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { useState, useRef } from "react";
 import { API_URI } from "../../Config";
 import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getPosts } from "../../Redux/postSlice";
+import { userState } from "../../Redux/userSlice";
 
 const Container = styled.div`
   display: flex;
@@ -104,6 +105,7 @@ export const PostAdd = () => {
   const [postContent, setpostContent] = useState("");
   const [isLoading, setisLoading] = useState(false);
   const dispatch = useDispatch();
+  const { currentUser } = useSelector(userState);
   const ImageFileInputChange = (e) => {
     for (var i = 0; i < e.target.files.length; i++) {
       const reader = new FileReader();
@@ -125,7 +127,7 @@ export const PostAdd = () => {
   const postToServer = () => {
     setisLoading(true);
     let post = {
-      userId: "626d918be17a9c01f348f72d",
+      userId: currentUser.userId,
       content: postContent,
       images: imageCollection,
     };
