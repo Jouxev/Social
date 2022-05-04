@@ -140,15 +140,13 @@ export const Navbar = () => {
     dispatch(logoutUser());
     navigate("/signin");
   };
-  useEffect(() => {
-    currentUser == null && navigate("/signin");
-  }, []);
+  useEffect(() => {}, []);
   return (
     <Container>
       <NavbarContainer>
         <HomeIconContainer>
-          <Link to={"/"}>
-            <HomeRoundedIcon />{" "}
+          <Link to="/">
+            <HomeRoundedIcon />
           </Link>
         </HomeIconContainer>
         <SearchContainer>
@@ -160,15 +158,17 @@ export const Navbar = () => {
           />
         </SearchContainer>
         <UserActionContainer>
-          <UserAvatar title={"Full name "} onClick={() => navigate("/profile")}>
-            <UserImage
-              src={
-                currentUser &&
-                (currentUser.userPic ? currentUser.userPic : avatarImage)
-              }
-              alt={currentUser && currentUser.fullname}
-            />
-          </UserAvatar>
+          <Link to={currentUser !== null && `/profile/${currentUser.userId}`}>
+            <UserAvatar title={"Full name "}>
+              <UserImage
+                src={
+                  currentUser &&
+                  (currentUser.userPic ? currentUser.userPic : avatarImage)
+                }
+                alt={currentUser && currentUser.fullname}
+              />
+            </UserAvatar>
+          </Link>
           <ThemeswitchIcon />
           <ForumOutlinedIcon onClick={() => navigate("/chat")} />
           <LogoutRoundedIcon onClick={() => logout()} />

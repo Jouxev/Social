@@ -1,4 +1,10 @@
+import axios from "axios";
+import { useState } from "react";
+import avatar from "../../Assets/Images/avatar.png";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { API_URI } from "../../Config";
 
 const Container = styled.div`
   display: flex;
@@ -42,21 +48,55 @@ const UserAvatar = styled.img`
 `;
 const UserName = styled.h2`
   margin-left: 20px;
-  font-size: 1.2rem;
+  font-size: 1rem;
 `;
 
-export const FriendItem = () => {
+export const FriendItem = (props) => {
+  const [User, setUser] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (props.friend) {
+      axios
+        .post(
+          `${API_URI}api/users/show`,
+          JSON.stringify({
+            userId: props.item,
+          }),
+          {
+            headers: { "Content-type": "application/json" },
+          }
+        )
+        .then((res) => {
+          setUser(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, []);
   return (
-    <Container>
+    <Container
+      onClick={() =>
+        !props.chat &&
+        navigate(`/profile/${User ? props.item : props.item._id}`)
+      }
+    >
       <Avatar>
         <UserAvatar
           src={
-            "https://i.pinimg.com/originals/91/d0/c9/91d0c92333ccb56395febdc1e3a2dc9b.jpg"
+            User
+              ? User.profilePic !== ""
+                ? User.profilePic
+                : avatar
+              : props.item.profilePic !== ""
+              ? props.item.profilePic
+              : avatar
           }
-          alt=""
+          alt="profile pci"
         />
       </Avatar>
-      <UserName> Karim Joujo </UserName>
+      <UserName> {User ? User.fullname : props.item.fullname} </UserName>
     </Container>
   );
 };

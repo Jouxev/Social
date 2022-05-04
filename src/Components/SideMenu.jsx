@@ -2,10 +2,18 @@ import styled from "styled-components";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import ForumOutlinedIcon from "@mui/icons-material/ForumOutlined";
 import ProfilePic from "../Assets/Images/profile.jpeg";
+import avatar from "../Assets/Images/avatar.png";
 
 import { ThemeswitchIcon } from ".";
 import { mobile, tablet } from "../responsive";
 import { FriendItem } from "./SideBar/FriendItem";
+import { API_URI } from "../Config";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutUser, userState } from "../Redux/userSlice";
+import { useEffect } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   position: fixed;
@@ -82,6 +90,7 @@ const UserImage = styled.img`
 
 const FriendListContainer = styled.div`
   padding: 10px;
+  height: 100%;
   overflow: scroll;
 `;
 const Title = styled.h1`
@@ -89,6 +98,41 @@ const Title = styled.h1`
   font-weight: lighter;
 `;
 export const SideMenu = (props) => {
+  const [followings, setfollowings] = useState([]);
+  const [otherUsers, setotherUsers] = useState([]);
+  const { currentUser } = useSelector(userState);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const loadFollowings = () => {
+    axios
+      .post(
+        `${API_URI}api/users/followings`,
+        JSON.stringify({
+          userId: currentUser.userId,
+        }),
+        { headers: { "Content-type": "application/json" } }
+      )
+      .then((res) => {
+        setfollowings(res.data);
+      })
+      .catch((err) => console.log(err));
+  };
+  const loadOtherUsers = () => {
+    axios
+      .get(`${API_URI}api/users/`)
+      .then((res) => {
+        setotherUsers(res.data);
+      })
+      .catch((err) => console.log(err));
+  };
+  const logout = () => {
+    dispatch(logoutUser());
+    navigate("/signin");
+  };
+  useEffect(() => {
+    loadFollowings();
+    loadOtherUsers();
+  }, []);
   return (
     <Container onClick={() => props.toggleMenu()}>
       <SideMenuContainer
@@ -97,21 +141,31 @@ export const SideMenu = (props) => {
         }}
       >
         <UserActionContainer>
-          <UserAvatar title={"Full name "}>
-            <UserImage src={ProfilePic} alt="userName" />
+          <UserAvatar
+            title={currentUser && currentUser.fullname}
+            onClick={() => navigate(`/profile/${currentUser.userId}`)}
+          >
+            <UserImage
+              src={
+                currentUser &&
+                (currentUser.userPic !== "" ? currentUser.userPic : avatar)
+              }
+              alt="userName"
+            />
           </UserAvatar>
           <ThemeswitchIcon />
-          <ForumOutlinedIcon />
-          <LogoutRoundedIcon />
+          <ForumOutlinedIcon onClick={() => navigate("/chat")} />
+          <LogoutRoundedIcon onClick={() => logout()} />
         </UserActionContainer>
         <FriendListContainer>
-          <Title>Friend List</Title>
-          <FriendItem />
-          <FriendItem />
-          <FriendItem />
-          <FriendItem />
-          <FriendItem />
-          <FriendItem />
+          <Title>Followings</Title>
+          {followings.map((item, index) => (
+            <FriendItem key={index} item={item} friend />
+          ))}
+          <Title>Other Users</Title>
+          {otherUsers.map((item, index) => (
+            <FriendItem key={index} item={item} />
+          ))}
         </FriendListContainer>
       </SideMenuContainer>
     </Container>

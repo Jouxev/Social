@@ -33,17 +33,15 @@ export const Posts = (props) => {
     <Container>
       <PostAdd />
       {loading === "loading" && <CircularProgress color="inherit" size={25} />}
-      {posts.map((post) => (
-        <>
-          {props.currentUserId ? (
-            post.author === props.currentUserId && (
-              <Post item={post} key={post._id} />
-            )
-          ) : (
-            <Post item={post} key={post._id} />
-          )}
-        </>
-      ))}
+      {posts.map((post, index) =>
+        props.currentUserId ? (
+          post.author === props.currentUserId && (
+            <Post item={post} key={index} />
+          )
+        ) : (
+          <Post item={post} key={index} />
+        )
+      )}
     </Container>
   );
 };

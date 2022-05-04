@@ -5,6 +5,7 @@ import { lightMode, darkMode, GlobalStyle } from "./theme";
 import { ThemeProvider } from "styled-components";
 import { storeState } from "./Redux/storeSlice";
 import { useSelector } from "react-redux";
+import { userState } from "./Redux/userSlice";
 
 const Container = styled.div`
   transition: 0.4s ease all;
@@ -12,6 +13,7 @@ const Container = styled.div`
 `;
 
 const App = () => {
+  const { currentUser } = useSelector(userState);
   const { selectedTheme } = useSelector(storeState);
   return (
     <BrowserRouter basename={process.env.PUBLIC_URL}>
@@ -19,13 +21,42 @@ const App = () => {
         <Container>
           <GlobalStyle />
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/chat" element={<ChatPage />} />
-            <Route path="/post/:id" element={<PostPage />} />
-            <Route path="/profile/:id" element={<Profile />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/signin" element={<Auth signin />} />
-            <Route path="/register" element={<Auth register />} />
+            <Route
+              path="/"
+              element={currentUser != null ? <Home /> : <Auth signin />}
+            />
+            <Route
+              path="/chat/:id"
+              element={currentUser != null ? <ChatPage /> : <Auth signin />}
+            />
+            <Route
+              path="/chat"
+              element={currentUser != null ? <ChatPage /> : <Auth signin />}
+            />
+            <Route
+              path="/post/:id"
+              element={currentUser != null ? <PostPage /> : <Auth signin />}
+            />
+            <Route
+              path="/profile/:id"
+              element={currentUser != null ? <Profile /> : <Auth signin />}
+            />
+            <Route
+              path="/profile"
+              element={currentUser != null ? <Profile /> : <Auth signin />}
+            />
+            <Route
+              path="/signin"
+              element={currentUser == null ? <Auth signin /> : <Home />}
+            />
+            <Route
+              path="/*"
+              element={currentUser == null ? <Auth signin /> : <Home />}
+            />
+            <Route
+              path="/register"
+              element={currentUser == null ? <Auth register /> : <Home />}
+            />
           </Routes>
         </Container>
       </ThemeProvider>

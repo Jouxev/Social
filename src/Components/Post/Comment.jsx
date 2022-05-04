@@ -14,7 +14,7 @@ const Content = styled.p`
 export const Comment = (props) => {
   return (
     <Container>
-      <Author item={props.item} />
+      <Author item={props.item} comment />
       <Content> {props.item.content} </Content>
     </Container>
   );

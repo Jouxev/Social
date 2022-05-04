@@ -3,15 +3,20 @@ import avatarImage from "../Assets/Images/avatar.png";
 import CameraAltRoundedIcon from "@mui/icons-material/CameraAltRounded";
 import WatchLaterRoundedIcon from "@mui/icons-material/WatchLaterRounded";
 import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
+import PersonAddAltRoundedIcon from "@mui/icons-material/PersonAddAltRounded";
+import PersonRemoveAlt1RoundedIcon from "@mui/icons-material/PersonRemoveAlt1Rounded";
 import EmailRoundedIcon from "@mui/icons-material/EmailRounded";
+import ChatRoundedIcon from "@mui/icons-material/ChatRounded";
 import CakeRoundedIcon from "@mui/icons-material/CakeRounded";
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, circularProgressClasses } from "@mui/material";
 import { tablet } from "../responsive";
 import moment from "moment";
 import { useRef } from "react";
 import axios from "axios";
 import { API_URI } from "../Config";
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import { userState } from "../Redux/userSlice";
 
 const Container = styled.div`
   background: ${(props) => props.theme.element};
@@ -33,7 +38,8 @@ const UserPic = styled.div`
   height: 100px;
   left: 50%;
   transform: translate(-50%, -65%);
-  & > svg {
+  & > svg,
+  span {
     font-size: 2rem;
     position: absolute;
     right: 0px;
@@ -86,6 +92,25 @@ const InfoItem = styled.li`
     margin-right: 20px;
   }
 `;
+
+const ActionItem = styled.div`
+  display: flex;
+  padding: 5px;
+  background: ${(props) => props.theme.input};
+  margin: 0px 5px;
+  border-radius: 5px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.2s ease all;
+  &:hover {
+    transform: scale(1.1);
+  }
+  & > svg {
+    margin-right: 5px;
+  }
+`;
 const ButtonEdit = styled.button`
   width: 85%;
   border: none;
@@ -108,6 +133,7 @@ const FileInput = styled.input`
 export const ProfileCard = (props) => {
   const InputRef = useRef(null);
   const [isLoading, setisLoading] = useState(false);
+  const { currentUser } = useSelector(userState);
 
   const uploadImage = (e) => {
     if (e.target.files.length > 0) {
@@ -127,7 +153,6 @@ export const ProfileCard = (props) => {
             }
           )
           .then((res) => {
-            console.log(res);
             setisLoading(false);
             props.refresh();
           })
@@ -138,6 +163,21 @@ export const ProfileCard = (props) => {
       };
     }
   };
+  const follow = () => {
+    axios
+      .post(
+        `${API_URI}api/users/follow`,
+        JSON.stringify({
+          userId: currentUser.userId,
+          follow: props.user._id,
+        }),
+        { headers: { "Content-type": "application/json" } }
+      )
+      .then((res) => {
+        props.refresh();
+      })
+      .catch((err) => console.log(err));
+  };
   return (
     <Container>
       <UserPic>
@@ -145,11 +185,12 @@ export const ProfileCard = (props) => {
           src={props.user.profilePic ? props.user.profilePic : avatarImage}
           alt="profile Picture"
         />
-        {isLoading ? (
-          <CircularProgress color="inherit" size={25} />
-        ) : (
-          <CameraAltRoundedIcon onClick={() => InputRef.current.click()} />
-        )}
+        {currentUser.userId === props.user._id &&
+          (isLoading ? (
+            <CircularProgress color="inherit" size={25} />
+          ) : (
+            <CameraAltRoundedIcon onClick={() => InputRef.current.click()} />
+          ))}
         <FileInput
           ref={InputRef}
           type={"file"}
@@ -175,7 +216,28 @@ export const ProfileCard = (props) => {
           <CakeRoundedIcon /> dec, 12th, 2015{" "}
         </InfoItem>
         <InfoItem>
-          <ButtonEdit> Edit Profile </ButtonEdit>
+          {currentUser.userId === props.user._id ? (
+            <ButtonEdit> Edit Profile </ButtonEdit>
+          ) : (
+            <>
+              {props.user.followers.includes(currentUser.userId) ? (
+                <ActionItem onClick={() => follow()}>
+                  <PersonRemoveAlt1RoundedIcon />
+                  Unfollow
+                </ActionItem>
+              ) : (
+                <ActionItem onClick={() => follow()}>
+                  <PersonAddAltRoundedIcon />
+                  Follow
+                </ActionItem>
+              )}
+
+              <ActionItem>
+                <ChatRoundedIcon />
+                Message
+              </ActionItem>
+            </>
+          )}
         </InfoItem>
       </UserInfo>
     </Container>

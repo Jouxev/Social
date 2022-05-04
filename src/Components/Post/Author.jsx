@@ -96,7 +96,11 @@ export const Author = (props) => {
       </UserAvatarContainer>
       <AuthorInfoContainer>
         <AuthorName> {author.fullname} </AuthorName>
-        <PostDateTime> {moment(props.item.createdAt).calendar()} </PostDateTime>
+        {!props.comment && (
+          <PostDateTime>
+            {moment(props.item.createdAt).calendar()}{" "}
+          </PostDateTime>
+        )}
       </AuthorInfoContainer>
     </Container>
   );

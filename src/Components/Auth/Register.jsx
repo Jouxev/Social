@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import CircularProgress from "@mui/material/CircularProgress";
 import axios from "axios";
@@ -80,6 +80,7 @@ export const Register = () => {
   const [passWordError, setpassWordError] = useState(false);
 
   const [isLoading, setisLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -112,6 +113,7 @@ export const Register = () => {
       .then((data) => {
         console.log(data);
         setisLoading(false);
+        navigate("/signin");
       });
   };
   return (

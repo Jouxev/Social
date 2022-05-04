@@ -43,7 +43,7 @@ export const Profile = () => {
   };
   useEffect(() => {
     fetchProfile();
-  }, []);
+  }, [id]);
   return (
     <Container>
       <Navbar />

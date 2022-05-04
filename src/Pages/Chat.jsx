@@ -7,6 +7,12 @@ import ImageRoundedIcon from "@mui/icons-material/ImageRounded";
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
 import { flexbox } from "@mui/system";
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import { userState } from "../Redux/userSlice";
+import axios from "axios";
+import { useEffect } from "react";
+import { API_URI } from "../Config";
+import { useNavigate, useParams } from "react-router-dom";
 
 const Container = styled.div`
   width: auto;
@@ -29,6 +35,7 @@ const FriendContainer = styled.div`
   border-bottom-left-radius: 10px;
   padding: 20px;
   height: 75vh;
+  overflow: scroll;
   ${(props) =>
     props.mobileShow
       ? mobile({
@@ -214,10 +221,42 @@ const ButtonIcon = styled.div`
 `;
 
 export const ChatPage = () => {
+  const { id } = useParams();
   const [frndsViewVisible, setfrndsViewVisible] = useState(true);
   const [cnvrView, setcnvrView] = useState(false);
+  const { currentUser } = useSelector(userState);
+  const [followings, setfollowings] = useState([]);
+  const [otherUsers, setotherUsers] = useState([]);
+  const navigate = useNavigate();
 
-  const loadMessage = () => {
+  const loadFollowings = () => {
+    axios
+      .post(
+        `${API_URI}api/users/followings`,
+        JSON.stringify({
+          userId: currentUser.userId,
+        }),
+        { headers: { "Content-type": "application/json" } }
+      )
+      .then((res) => {
+        setfollowings(res.data);
+      })
+      .catch((err) => console.log(err));
+  };
+  const loadOtherUsers = () => {
+    axios
+      .get(`${API_URI}api/users/`)
+      .then((res) => {
+        setotherUsers(res.data);
+      })
+      .catch((err) => console.log(err));
+  };
+  useEffect(() => {
+    loadFollowings();
+    loadOtherUsers();
+  }, []);
+  const loadMessage = (item) => {
+    navigate(`/chat/${item}`);
     setcnvrView(true);
     setfrndsViewVisible(false);
   };
@@ -231,34 +270,26 @@ export const ChatPage = () => {
       <Navbar />
       <ChatContainer>
         <FriendContainer mobileShow={frndsViewVisible}>
-          <FriendItemContainer
-            onClick={() => {
-              loadMessage();
-            }}
-          >
-            <FriendItem />
-          </FriendItemContainer>
-          <FriendItemContainer
-            onClick={() => {
-              loadMessage();
-            }}
-          >
-            <FriendItem />
-          </FriendItemContainer>
-          <FriendItemContainer
-            onClick={() => {
-              loadMessage();
-            }}
-          >
-            <FriendItem />
-          </FriendItemContainer>
-          <FriendItemContainer
-            onClick={() => {
-              loadMessage();
-            }}
-          >
-            <FriendItem />
-          </FriendItemContainer>
+          {followings.map((item, index) => (
+            <FriendItemContainer
+              key={index}
+              onClick={() => {
+                loadMessage(item);
+              }}
+            >
+              <FriendItem item={item} friend chat />
+            </FriendItemContainer>
+          ))}
+          {otherUsers.map((item, index) => (
+            <FriendItemContainer
+              key={index}
+              onClick={() => {
+                loadMessage(item._id);
+              }}
+            >
+              <FriendItem item={item} friend chat />
+            </FriendItemContainer>
+          ))}
         </FriendContainer>
         <ConversationContainer mobileShow={cnvrView}>
           <Recipient>
