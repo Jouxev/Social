@@ -36,6 +36,11 @@ const FriendContainer = styled.div`
   padding: 20px;
   height: 75vh;
   overflow: scroll;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  &::-webkit-scrollbar {
+    display: none;
+  }
   ${(props) =>
     props.mobileShow
       ? mobile({
@@ -142,6 +147,11 @@ const UserName = styled.h1`
 const Messages = styled.div`
   height: 70%;
   overflow: scroll;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  &::-webkit-scrollbar {
+    display: none;
+  }
   padding: 20px;
   display: flex;
   flex-direction: column;

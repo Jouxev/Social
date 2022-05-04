@@ -17,6 +17,11 @@ const Container = styled.div`
   border-radius: 10px;
   padding: 20px;
   overflow: scroll;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  &::-webkit-scrollbar {
+    display: none;
+  }
   ${tablet({
     display: "none",
   })}
