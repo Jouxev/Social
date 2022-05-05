@@ -16,10 +16,10 @@ const Container = styled.main`
   align-items: center;
   justify-content: center;
   ${tablet({
-    width: "80%",
+    width: "100%",
   })}
   ${mobile({
-    width: "90%",
+    width: "100%",
   })}
 `;
 
