@@ -5,14 +5,16 @@ import ArrowBackIosRoundedIcon from "@mui/icons-material/ArrowBackIosRounded";
 import { mobile, tablet } from "../responsive";
 import ImageRoundedIcon from "@mui/icons-material/ImageRounded";
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
-import { flexbox } from "@mui/system";
+import { CircularProgress } from "@mui/material";
 import { useState } from "react";
+import avatar from "../Assets/Images/avatar.png";
 import { useSelector } from "react-redux";
 import { userState } from "../Redux/userSlice";
 import axios from "axios";
 import { useEffect } from "react";
 import { API_URI } from "../Config";
 import { useNavigate, useParams } from "react-router-dom";
+import moment from "moment";
 
 const Container = styled.div`
   width: auto;
@@ -165,7 +167,7 @@ const MeesageText = styled.div`
   height: fit-content;
   position: relative;
   border-radius: 5px;
-  margin: 5px 0px;
+  margin: 10px 0px;
   ${(props) => !props.recieved && " align-self: flex-end;"};
   &::after {
     margin: 0;
@@ -183,8 +185,8 @@ const MeesageText = styled.div`
 `;
 const MessageTime = styled.span`
   position: absolute;
-  font-size: 0.6rem;
-  right: 0.5em;
+  font-size: 0.56rem;
+  ${(props) => (props.recieved ? "left: 0.5rem" : "right: 0.5rem")};
   bottom: -2em;
 `;
 const AddMessage = styled.div`
@@ -235,8 +237,13 @@ export const ChatPage = () => {
   const [frndsViewVisible, setfrndsViewVisible] = useState(true);
   const [cnvrView, setcnvrView] = useState(false);
   const { currentUser } = useSelector(userState);
+  const [messageContent, setMessageContent] = useState("");
+  const [imageCollections, setImageCollections] = useState([]);
+  const [isSendingLoading, setIsSendingLoading] = useState(false);
   const [followings, setfollowings] = useState([]);
   const [otherUsers, setotherUsers] = useState([]);
+  const [conversationMessage, setconversationMessage] = useState(null);
+  const [reciever, setreciever] = useState(null);
   const navigate = useNavigate();
 
   const loadFollowings = () => {
@@ -261,10 +268,36 @@ export const ChatPage = () => {
       })
       .catch((err) => console.log(err));
   };
-  useEffect(() => {
-    loadFollowings();
-    loadOtherUsers();
-  }, []);
+  const loadConversation = async () => {
+    await axios
+      .post(
+        `${API_URI}api/message/conversation`,
+        JSON.stringify({
+          user: currentUser.userId,
+          friend: id,
+        }),
+        { headers: { "Content-type": "application/json" } }
+      )
+      .then((data) => {
+        setconversationMessage(data.data);
+      })
+      .catch((err) => console.log(err));
+  };
+  const loadReciever = async () => {
+    await axios
+      .post(
+        `${API_URI}api/users/show`,
+        JSON.stringify({
+          userId: id,
+        }),
+        { headers: { "Content-type": "application/json" } }
+      )
+      .then((data) => {
+        setreciever(data.data);
+      })
+      .catch((err) => console.log(err));
+  };
+
   const loadMessage = (item) => {
     navigate(`/chat/${item}`);
     setcnvrView(true);
@@ -275,6 +308,41 @@ export const ChatPage = () => {
     setfrndsViewVisible(true);
   };
 
+  const sendMessage = async () => {
+    setIsSendingLoading(true);
+    await axios
+      .post(
+        `${API_URI}api/message/send`,
+        JSON.stringify({
+          sender: currentUser.userId,
+          reciever: reciever._id,
+          content: messageContent,
+          images: imageCollections,
+        }),
+        { headers: { "Content-type": "application/json" } }
+      )
+      .then((data) => {
+        console.log(data);
+        setMessageContent("");
+        setIsSendingLoading(false);
+      })
+      .catch((err) => {
+        setIsSendingLoading(false);
+        console.log(err);
+      });
+  };
+  useEffect(() => {
+    loadFollowings();
+    loadOtherUsers();
+    loadConversation();
+    loadReciever();
+
+    const interval = setInterval(() => {
+      loadConversation();
+    }, 2500);
+
+    return () => clearInterval(interval);
+  }, [id]);
   return (
     <Container>
       <Navbar />
@@ -309,51 +377,55 @@ export const ChatPage = () => {
             <UserAvatarContainer>
               <UserImage
                 src={
-                  "https://i.pinimg.com/originals/91/d0/c9/91d0c92333ccb56395febdc1e3a2dc9b.jpg"
+                  reciever
+                    ? reciever.profilePic !== ""
+                      ? reciever.profilePic
+                      : avatar
+                    : avatar
                 }
-                alt="recipient iamge"
+                alt={reciever ? reciever.fullname : "picture"}
               />
             </UserAvatarContainer>
-            <UserName> Carl johnson</UserName>
+            <UserName> {reciever ? reciever.fullname : "User"}</UserName>
           </Recipient>
           <Messages>
-            <MeesageText recieved> hello bro </MeesageText>
-            <MeesageText> hi </MeesageText>
-            <MeesageText recieved> How are you ?</MeesageText>
-            <MeesageText>
-              good thanks , what about you ?
-              <MessageTime> 12:34 AM </MessageTime>{" "}
-            </MeesageText>
-            <MeesageText recieved> hello bro </MeesageText>
-            <MeesageText> hi </MeesageText>
-            <MeesageText recieved> How are you ?</MeesageText>
-            <MeesageText>
-              good thanks , what about you ?
-              <MessageTime> 12:34 AM </MessageTime>{" "}
-            </MeesageText>
-            <MeesageText recieved> hello bro </MeesageText>
-            <MeesageText> hi </MeesageText>
-            <MeesageText recieved> How are you ?</MeesageText>
-            <MeesageText>
-              good thanks , what about you ?
-              <MessageTime> 12:34 AM </MessageTime>{" "}
-            </MeesageText>
-            <MeesageText recieved> hello bro </MeesageText>
-            <MeesageText> hi </MeesageText>
-            <MeesageText recieved> How are you ?</MeesageText>
-            <MeesageText>
-              good thanks , what about you ?
-              <MessageTime> 12:34 AM </MessageTime>{" "}
-            </MeesageText>
+            {conversationMessage && conversationMessage.length > 0
+              ? conversationMessage.map((message, index) => (
+                  <MeesageText
+                    key={index}
+                    recieved={message.reciever == currentUser.userId}
+                  >
+                    {message.content}
+                    <MessageTime
+                      recieved={message.reciever == currentUser.userId}
+                    >
+                      {" "}
+                      {moment(message.createdAt).calendar()}{" "}
+                    </MessageTime>
+                  </MeesageText>
+                ))
+              : "No Message yet"}
           </Messages>
           <AddMessage>
-            <AddText rows={2} placeholder="type a message ..." />
+            <AddText
+              rows={2}
+              placeholder="type a message ..."
+              value={messageContent}
+              onChange={(e) => setMessageContent(e.target.value)}
+            />
             <ActionButton>
               <ButtonIcon>
                 <ImageRoundedIcon />
               </ButtonIcon>
               <ButtonIcon>
-                <SendRoundedIcon />
+                {isSendingLoading ? (
+                  <CircularProgress color={"inherit"} size={25} />
+                ) : (
+                  <SendRoundedIcon
+                    disabled={isSendingLoading}
+                    onClick={() => sendMessage()}
+                  />
+                )}
               </ButtonIcon>
             </ActionButton>
           </AddMessage>

@@ -7,6 +7,8 @@ import { API_URI } from "../../Config";
 import { tablet } from "../../responsive";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser, userState } from "../../Redux/userSlice";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Container = styled.div`
   background: ${(props) => props.theme.input};
@@ -106,13 +108,22 @@ export const Signin = () => {
       .catch((err) => {
         console.log(err);
         setisLoading(false);
+        toast.error("email or password are incorrect,", {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       });
   };
   const handleSubmit = (e) => {
     e.preventDefault();
     userName === "" ? setuserNameError(true) : setuserNameError(false);
     passWord === "" ? setpassWordError(true) : setpassWordError(false);
-    (!userNameError || !passWordError) && login();
+    !userNameError && !passWordError && login();
   };
 
   return (
@@ -150,6 +161,17 @@ export const Signin = () => {
           Don't have account ? <Link to="/register"> Register Now </Link>
         </LinkContainer>
       </Form>
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </Container>
   );
 };

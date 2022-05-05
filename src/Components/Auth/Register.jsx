@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import CircularProgress from "@mui/material/CircularProgress";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { API_URI } from "../../Config";
 
 const Container = styled.div`
@@ -113,6 +115,15 @@ export const Register = () => {
       .then((data) => {
         console.log(data);
         setisLoading(false);
+        toast.success("Registration Completed , You need to sign In", {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
         navigate("/signin");
       });
   };
@@ -160,6 +171,17 @@ export const Register = () => {
           Already have account ? <Link to="/signin"> Sign In </Link>
         </LinkContainer>
       </Form>
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </Container>
   );
 };
