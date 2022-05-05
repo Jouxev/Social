@@ -4,4 +4,15 @@ import { SideMenu } from "./SideMenu";
 import { Posts } from "./Posts";
 import { SideBar } from "./SideBar";
 import { ProfileCard } from "./ProfileCard";
-export { Navbar, ThemeswitchIcon, SideMenu, Posts, SideBar, ProfileCard };
+import { EditProfile } from "./EditProfile";
+import { ImageGallery } from "./ImageGallery";
+export {
+  Navbar,
+  ThemeswitchIcon,
+  SideMenu,
+  Posts,
+  SideBar,
+  ProfileCard,
+  EditProfile,
+  ImageGallery,
+};

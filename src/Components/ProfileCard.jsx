@@ -15,11 +15,14 @@ import { useRef } from "react";
 import axios from "axios";
 import { API_URI } from "../Config";
 import { useState } from "react";
-import { useSelector } from "react-redux";
-import { userState } from "../Redux/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { setUser, userState } from "../Redux/userSlice";
+import { EditProfile } from ".";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   background: ${(props) => props.theme.element};
+  position: relative;
   margin-top: 3rem;
   height: 400px;
   border-radius: 20px;
@@ -134,7 +137,13 @@ export const ProfileCard = (props) => {
   const InputRef = useRef(null);
   const [isLoading, setisLoading] = useState(false);
   const { currentUser } = useSelector(userState);
+  const [editOpened, setEditOpened] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
+  const toggleEdit = () => {
+    setEditOpened(!editOpened);
+  };
   const uploadImage = (e) => {
     if (e.target.files.length > 0) {
       setisLoading(true);
@@ -154,7 +163,11 @@ export const ProfileCard = (props) => {
           )
           .then((res) => {
             setisLoading(false);
-            props.refresh();
+            props.refresh().then(() => {
+              dispatch(
+                setUser({ ...currentUser, userPic: props.user.profilePic })
+              );
+            });
           })
           .catch((err) => {
             console.log(err);
@@ -207,17 +220,20 @@ export const ProfileCard = (props) => {
           <WatchLaterRoundedIcon /> {moment(props.user.createdAt).calendar()}
         </InfoItem>
         <InfoItem>
-          <LocationOnRoundedIcon /> Algiers, Algeria{" "}
+          <LocationOnRoundedIcon /> {props.user.location}
         </InfoItem>
         <InfoItem>
           <EmailRoundedIcon /> {props.user.email}
         </InfoItem>
         <InfoItem>
-          <CakeRoundedIcon /> dec, 12th, 2015{" "}
+          <CakeRoundedIcon />{" "}
+          {props.user.birthday
+            ? moment(props.user.birthday).utc().format("DD - MM - YYYY")
+            : ""}
         </InfoItem>
         <InfoItem>
           {currentUser.userId === props.user._id ? (
-            <ButtonEdit> Edit Profile </ButtonEdit>
+            <ButtonEdit onClick={() => toggleEdit()}> Edit Profile </ButtonEdit>
           ) : (
             <>
               {props.user.followers.includes(currentUser.userId) ? (
@@ -232,7 +248,7 @@ export const ProfileCard = (props) => {
                 </ActionItem>
               )}
 
-              <ActionItem>
+              <ActionItem onClick={() => navigate(`/chat/${props.user._id}`)}>
                 <ChatRoundedIcon />
                 Message
               </ActionItem>
@@ -240,6 +256,13 @@ export const ProfileCard = (props) => {
           )}
         </InfoItem>
       </UserInfo>
+      {editOpened && (
+        <EditProfile
+          toggleEdit={() => toggleEdit()}
+          refresh={props.refresh()}
+          s
+        />
+      )}
     </Container>
   );
 };

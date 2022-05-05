@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { useState } from "react";
 import { mobile } from "../../responsive";
 import { useNavigate } from "react-router-dom";
+import { ImageGallery } from "..";
 
 const Container = styled.div`
   display: flex;
@@ -49,6 +50,10 @@ const Thumb = styled.img`
 
 export const PostContent = (props) => {
   const [selectedImage, setselectedImage] = useState(null);
+  const [isGalleryOpened, setisGalleryOpened] = useState(false);
+  const toggleGalleryOpen = () => {
+    setisGalleryOpened(!isGalleryOpened);
+  };
   let navigate = useNavigate();
   return (
     <Container onClick={() => navigate(`/post/${props.item._id}`)}>
@@ -60,6 +65,10 @@ export const PostContent = (props) => {
               selectedImage !== null ? selectedImage : props.item.Images[0].url
             }
             alt={props.item.content}
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleGalleryOpen();
+            }}
           />
           {props.item.Images.length > 1 && (
             <ImagesTumbnails>
@@ -68,12 +77,21 @@ export const PostContent = (props) => {
                   key={index}
                   src={image.url}
                   alt="imagePreview"
-                  onClick={(e) => setselectedImage(e.target.src)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setselectedImage(e.target.src);
+                  }}
                 />
               ))}
             </ImagesTumbnails>
           )}
         </PostImages>
+      )}
+      {isGalleryOpened && (
+        <ImageGallery
+          imgs={props.item.Images}
+          toggleGalleryOpen={() => toggleGalleryOpen()}
+        />
       )}
     </Container>
   );

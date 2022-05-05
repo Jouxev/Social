@@ -99,7 +99,6 @@ export const Signin = () => {
         }
       )
       .then((res) => {
-        console.log(res);
         dispatch(setUser(res.data));
         setisLoading(false);
         navigate("/");
