@@ -29,8 +29,8 @@ const Container = styled.div`
   width: 30%;
   position: relative;
   ${tablet({
-    width: "90%",
-    margin: "5rem 2rem 0rem 2rem",
+    width: "100%",
+    marginTop: "5rem",
   })}
 `;
 const UserPic = styled.div`
