@@ -18,7 +18,8 @@ const Container = styled.div`
     display: none;
   }
   ${tablet({
-    width: "90%",
+    width: "100%",
+    margin: "2rem 0rem",
   })}
 `;
 
