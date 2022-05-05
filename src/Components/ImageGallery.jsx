@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import styled from "styled-components";
 import { tablet } from "../responsive";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 
 const Container = styled.div`
   height: 100vh;
@@ -17,6 +18,7 @@ const Container = styled.div`
 `;
 const Wrapper = styled.div`
   background: ${(props) => props.theme.element};
+  position: relative;
   height: 600px;
   border-radius: 20px;
   padding: 20px;
@@ -28,6 +30,7 @@ const MainImage = styled.img`
   height: 80%;
   width: auto;
   object-fit: cover;
+  margin-top: 50px;
   border-radius: 20px;
   ${tablet({
     width: "100%",
@@ -50,6 +53,28 @@ const ImageThumb = styled.img`
     opacity: 0.8;
   }
 `;
+const ButtonClose = styled.div`
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  padding: 10px;
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  background: ${(props) => props.theme.input};
+  &:hover {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+  & > svg {
+    color: ${(props) => props.theme.fontColorSecondary};
+    font-size: 2rem;
+  }
+`;
 
 export const ImageGallery = (props) => {
   const [mainImage, setmainImage] = useState(null);
@@ -61,6 +86,9 @@ export const ImageGallery = (props) => {
   return (
     <Container onClick={() => props.toggleGalleryOpen()}>
       <Wrapper>
+        <ButtonClose>
+          <CloseRoundedIcon />
+        </ButtonClose>
         <MainImage src={mainImage && mainImage.url} alt="postImage" />
         <ImageThumbContainer
           onClick={(e) => {
