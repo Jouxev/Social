@@ -84,9 +84,14 @@ export const ImageGallery = (props) => {
   }, []);
 
   return (
-    <Container onClick={() => props.toggleGalleryOpen()}>
+    <Container
+      onClick={(e) => {
+        e.stopPropagation();
+        props.toggleGalleryOpen();
+      }}
+    >
       <Wrapper>
-        <ButtonClose>
+        <ButtonClose onClick={() => props.toggleGalleryOpen()}>
           <CloseRoundedIcon />
         </ButtonClose>
         <MainImage src={mainImage && mainImage.url} alt="postImage" />

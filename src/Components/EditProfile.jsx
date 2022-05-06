@@ -8,6 +8,8 @@ import { API_URI } from "../Config";
 import { setUser, userState } from "../Redux/userSlice";
 import { mobile, tablet } from "../responsive";
 import moment from "moment";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Container = styled.div`
   position: fixed;
@@ -84,6 +86,15 @@ export const EditProfile = (props) => {
       })
       .then((res) => {
         setIsLoading(false);
+        toast.success("Account Informations has been updated,", {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
         dispatch(setUser(user));
         props.refresh();
       })
@@ -152,6 +163,17 @@ export const EditProfile = (props) => {
           </InputGroupe>
         </Form>
       </Wrapper>
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </Container>
   );
 };

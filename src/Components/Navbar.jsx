@@ -5,6 +5,7 @@ import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import ForumOutlinedIcon from "@mui/icons-material/ForumOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
+import { CircularProgress } from "@mui/material";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 
@@ -15,6 +16,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser, userState } from "../Redux/userSlice";
+import axios from "axios";
+import { API_URI } from "../Config";
 
 const Container = styled.header`
   position: relative;
@@ -37,6 +40,7 @@ const HomeIconContainer = styled.div`
   }
 `;
 const SearchContainer = styled.div`
+position: relative;
 display: flex;
 padding: 5px;
 border-radius: 10px;
@@ -73,6 +77,16 @@ const SearchInput = styled.input`
   ${mobile({
     width: "10rem",
   })}
+`;
+const SearchResult = styled.div`
+  position: absolute;
+  top: 3.2rem;
+  left: 0;
+  max-height: 80vh;
+  width: 100%;
+  border-radius: 20px;
+  background-color: ${(props) => props.theme.element};
+  box-shadow: 0 0 30px rgb(0 0 0 / 47%);
 `;
 const UserActionContainer = styled.div`
   display: flex;
@@ -130,15 +144,73 @@ const UserImage = styled.img`
   border-radius: 50%;
 `;
 
+const SearchResultDiv = styled.div`
+  padding: 20px;
+  max-height: 50%;
+  overflow: scroll;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+const Title = styled.h3`
+  font-size: 16px;
+`;
+const Items = styled.ul`
+  list-style: none;
+  margin: 0;
+`;
+const Item = styled.li`
+  margin: 2px 0px;
+  font-size: 16px;
+  font-weight: bold;
+  color: ${(props) => props.theme.fontColorSecondary};
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`;
 export const Navbar = () => {
   const [menuOpened, setmenuOpened] = useState(false);
   const { currentUser } = useSelector(userState);
+  const [searchVisible, setsearchVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [searchText, setsearchText] = useState("");
+  const [searchPostResult, setsearchPostResult] = useState([]);
+  const [searchUserResult, setsearchUserResult] = useState([]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const logout = () => {
     dispatch(logoutUser());
     navigate("/signin");
+  };
+  const handleInputChange = (e) => {
+    setsearchText(e.target.value);
+    searchText.length > 2 && getSeachResult();
+  };
+
+  const getSeachResult = async () => {
+    setIsLoading(true);
+    await axios
+      .post(
+        `${API_URI}api/search`,
+        JSON.stringify({
+          keyword: searchText,
+        }),
+        { headers: { "Content-type": "application/json" } }
+      )
+      .then((data) => {
+        console.log(data);
+        setsearchPostResult(data.data.postsResult);
+        setsearchUserResult(data.data.usersResult);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+      });
   };
   useEffect(() => {}, []);
   return (
@@ -155,7 +227,51 @@ export const Navbar = () => {
             type={"text"}
             placeholder="Tap to Search"
             title="Search for user or a post"
+            onChange={(e) => handleInputChange(e)}
+            onKeyDown={() =>
+              searchText.length > 2
+                ? setsearchVisible(true)
+                : setsearchVisible(false)
+            }
+            value={searchText}
           />
+          {searchVisible &&
+            (isLoading ? (
+              <CircularProgress color="inherit" size={25} />
+            ) : (
+              <SearchResult>
+                <SearchResultDiv>
+                  <Title> User ({searchUserResult.length})</Title>
+                  <Items>
+                    <Items>
+                      {searchUserResult.map((user, index) => (
+                        <Item
+                          key={index}
+                          onClick={() => navigate(`/profile/${user._id}`)}
+                        >
+                          {" "}
+                          {user.fullname}
+                        </Item>
+                      ))}
+                    </Items>
+                  </Items>
+                </SearchResultDiv>
+                <SearchResultDiv>
+                  <Title> Posts ({searchPostResult.length})</Title>
+                  <Items>
+                    {searchPostResult.map((post, index) => (
+                      <Item
+                        key={index}
+                        onClick={() => navigate(`/post/${post._id}`)}
+                      >
+                        {" "}
+                        {post.content}
+                      </Item>
+                    ))}
+                  </Items>
+                </SearchResultDiv>
+              </SearchResult>
+            ))}
         </SearchContainer>
         <UserActionContainer>
           <Link to={currentUser !== null && `/profile/${currentUser.userId}`}>

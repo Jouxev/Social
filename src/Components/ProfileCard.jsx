@@ -17,7 +17,7 @@ import { API_URI } from "../Config";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser, userState } from "../Redux/userSlice";
-import { EditProfile } from ".";
+import { EditProfile, ImageGallery } from ".";
 import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
@@ -138,6 +138,10 @@ export const ProfileCard = (props) => {
   const [isLoading, setisLoading] = useState(false);
   const { currentUser } = useSelector(userState);
   const [editOpened, setEditOpened] = useState(false);
+  const [isGalleryOpened, setIsGalleryOpened] = useState(false);
+  const toggleGalleryOpen = () => {
+    setIsGalleryOpened(!isGalleryOpened);
+  };
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -197,6 +201,7 @@ export const ProfileCard = (props) => {
         <UserImage
           src={props.user.profilePic ? props.user.profilePic : avatarImage}
           alt="profile Picture"
+          onClick={() => toggleGalleryOpen()}
         />
         {currentUser.userId === props.user._id &&
           (isLoading ? (
@@ -261,6 +266,12 @@ export const ProfileCard = (props) => {
           toggleEdit={() => toggleEdit()}
           refresh={props.refresh()}
           s
+        />
+      )}
+      {isGalleryOpened && props.user.profilePic !== "" && (
+        <ImageGallery
+          imgs={[{ url: props.user.profilePic }]}
+          toggleGalleryOpen={() => toggleGalleryOpen()}
         />
       )}
     </Container>

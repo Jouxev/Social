@@ -386,7 +386,10 @@ export const ChatPage = () => {
                 alt={reciever ? reciever.fullname : "picture"}
               />
             </UserAvatarContainer>
-            <UserName> {reciever ? reciever.fullname : "User"}</UserName>
+            <UserName>
+              {" "}
+              {reciever ? reciever.fullname : "No User Selected"}
+            </UserName>
           </Recipient>
           <Messages>
             {conversationMessage && conversationMessage.length > 0
@@ -406,29 +409,31 @@ export const ChatPage = () => {
                 ))
               : "No Message yet"}
           </Messages>
-          <AddMessage>
-            <AddText
-              rows={2}
-              placeholder="type a message ..."
-              value={messageContent}
-              onChange={(e) => setMessageContent(e.target.value)}
-            />
-            <ActionButton>
-              <ButtonIcon>
-                <ImageRoundedIcon />
-              </ButtonIcon>
-              <ButtonIcon>
-                {isSendingLoading ? (
-                  <CircularProgress color={"inherit"} size={25} />
-                ) : (
-                  <SendRoundedIcon
-                    disabled={isSendingLoading}
-                    onClick={() => sendMessage()}
-                  />
-                )}
-              </ButtonIcon>
-            </ActionButton>
-          </AddMessage>
+          {reciever && (
+            <AddMessage>
+              <AddText
+                rows={2}
+                placeholder="type a message ..."
+                value={messageContent}
+                onChange={(e) => setMessageContent(e.target.value)}
+              />
+              <ActionButton>
+                <ButtonIcon>
+                  <ImageRoundedIcon />
+                </ButtonIcon>
+                <ButtonIcon>
+                  {isSendingLoading ? (
+                    <CircularProgress color={"inherit"} size={25} />
+                  ) : (
+                    <SendRoundedIcon
+                      disabled={isSendingLoading}
+                      onClick={() => sendMessage()}
+                    />
+                  )}
+                </ButtonIcon>
+              </ActionButton>
+            </AddMessage>
+          )}
         </ConversationContainer>
       </ChatContainer>
     </Container>
