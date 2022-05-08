@@ -87,6 +87,7 @@ const SearchResult = styled.div`
   border-radius: 20px;
   background-color: ${(props) => props.theme.element};
   box-shadow: 0 0 30px rgb(0 0 0 / 47%);
+  z-index: 9 !important;
 `;
 const UserActionContainer = styled.div`
   display: flex;
