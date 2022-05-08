@@ -159,11 +159,11 @@ const Title = styled.h3`
   font-size: 16px;
 `;
 const Items = styled.ul`
-  list-style: none;
+  list-style: auto;
   margin: 0;
 `;
 const Item = styled.li`
-  margin: 2px 0px;
+  margin: 10px 0px;
   font-size: 16px;
   font-weight: bold;
   color: ${(props) => props.theme.fontColorSecondary};
@@ -203,7 +203,6 @@ export const Navbar = () => {
         { headers: { "Content-type": "application/json" } }
       )
       .then((data) => {
-        console.log(data);
         setsearchPostResult(data.data.postsResult);
         setsearchUserResult(data.data.usersResult);
         setIsLoading(false);
@@ -223,7 +222,9 @@ export const Navbar = () => {
           </Link>
         </HomeIconContainer>
         <SearchContainer>
-          <SearchOutlinedIcon />
+          <SearchOutlinedIcon
+            onClick={() => setsearchVisible(!searchVisible)}
+          />
           <SearchInput
             type={"text"}
             placeholder="Tap to Search"
@@ -248,7 +249,10 @@ export const Navbar = () => {
                       {searchUserResult.map((user, index) => (
                         <Item
                           key={index}
-                          onClick={() => navigate(`/profile/${user._id}`)}
+                          onClick={() => {
+                            navigate(`/profile/${user._id}`);
+                            setsearchVisible(!searchVisible);
+                          }}
                         >
                           {" "}
                           {user.fullname}
@@ -263,7 +267,10 @@ export const Navbar = () => {
                     {searchPostResult.map((post, index) => (
                       <Item
                         key={index}
-                        onClick={() => navigate(`/post/${post._id}`)}
+                        onClick={() => {
+                          navigate(`/post/${post._id}`);
+                          setsearchVisible(!searchVisible);
+                        }}
                       >
                         {" "}
                         {post.content}
